@@ -2,14 +2,14 @@
 #include <esp_camera.h>
 #include <WiFi.h>
 
-// WiFiServer server(80);
-/*
+WiFiServer server(80);
+
 const char ssid[] = "ESP32-WiFi";
 const char pass[] = "esp32wifi";
 
 const IPAddress ip(192, 168, 20, 2);
 const IPAddress subnet(255, 255, 255, 0);
-*/
+
 void setup()
 {
   Serial.begin(115200);
@@ -34,12 +34,12 @@ void setup()
   config.xclk_freq_hz = 20000000;
   config.ledc_timer = LEDC_TIMER_0;
   config.ledc_channel = LEDC_CHANNEL_0;
-  // config.pixel_format = PIXFORMAT_JPEG;
-  // config.frame_size = FRAMESIZE_240X240;
-  config.pixel_format = PIXFORMAT_RGB444;
+  config.pixel_format = PIXFORMAT_YUV422;
   config.frame_size = FRAMESIZE_QQVGA;
+  // config.pixel_format = PIXFORMAT_RGB888;
+  // config.frame_size = FRAMESIZE_QQVGA;
 
-  // config.jpeg_quality = 12;
+  // config.jpeg_quality = 50;
   config.fb_count = 1;
 
 esp_err_t  err = esp_camera_init(&config);
@@ -53,13 +53,12 @@ if(err != ESP_OK)
 
 void loop() {
   
-  // WiFiClient client = server.available();
-  /*
+  WiFiClient client = server.available();
+  
   if(client)
   {
     Serial.println("success");
     client.println("FUCKOFF");
-    server.println("FUCKOFF");
     client.println("<html>");
     client.println("<head>");
     client.println("<title>ESP32 Web Server HTML</title>");
@@ -76,7 +75,7 @@ void loop() {
     // Serial.println("cant open");
   }
   // put your main code here, to run repeatedly:
-  */
+  
   camera_fb_t *fb = NULL;
   esp_err_t res = ESP_OK;
 
@@ -85,5 +84,5 @@ void loop() {
   {
     Serial.println("holy shit");
   }
-  // Serial.println(fb -> len);
+  Serial.println(fb -> len);
 }
