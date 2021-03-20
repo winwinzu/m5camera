@@ -2,17 +2,17 @@
 #include <esp_camera.h>
 #include <WiFi.h>
 
-WiFiServer server(80);
-
+// WiFiServer server(80);
+/*
 const char ssid[] = "ESP32-WiFi";
 const char pass[] = "esp32wifi";
 
 const IPAddress ip(192, 168, 20, 2);
 const IPAddress subnet(255, 255, 255, 0);
-
-esp_err_t err;
-void camera_setup()
+*/
+void setup()
 {
+  Serial.begin(115200);
   camera_config_t config;
   config.pin_sscb_scl = 23;
   config.pin_sscb_sda = 22;
@@ -29,33 +29,32 @@ void camera_setup()
   config.pin_d6 = 36;
   config.pin_d7 = 19;
   config.pin_reset = 15;
-  
+  config.pin_pwdn = -1;
+
   config.xclk_freq_hz = 20000000;
   config.ledc_timer = LEDC_TIMER_0;
   config.ledc_channel = LEDC_CHANNEL_0;
-  config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_240X240;
-  config.jpeg_quality = 10;
-  config.fb_count = 2;
+  // config.pixel_format = PIXFORMAT_JPEG;
+  // config.frame_size = FRAMESIZE_240X240;
+  config.pixel_format = PIXFORMAT_RGB444;
+  config.frame_size = FRAMESIZE_QQVGA;
 
-  err = esp_camera_init(&config);
+  // config.jpeg_quality = 12;
+  config.fb_count = 1;
+
+esp_err_t  err = esp_camera_init(&config);
+if(err != ESP_OK)
+{
+  Serial.println("Error");
+}
 }
 
 
-void setup() {
-  Serial.begin(115200);
-  WiFi.softAP(ssid, pass);
-  delay(1000);
-  Serial.println("Initializing...");
-  WiFi.softAPConfig(ip, ip, subnet);
-  IPAddress serverIP = WiFi.softAPIP();
-  server.begin();
-  camera_setup();
-  // put your setup code here, to run once:
-}
 
 void loop() {
-  WiFiClient client = server.available();
+  
+  // WiFiClient client = server.available();
+  /*
   if(client)
   {
     Serial.println("success");
@@ -77,8 +76,14 @@ void loop() {
     // Serial.println("cant open");
   }
   // put your main code here, to run repeatedly:
-  if(err != ESP_OK)
+  */
+  camera_fb_t *fb = NULL;
+  esp_err_t res = ESP_OK;
+
+  fb = esp_camera_fb_get();
+  if(!fb)
   {
-    Serial.println("fuck");
+    Serial.println("holy shit");
   }
+  // Serial.println(fb -> len);
 }
