@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <esp_camera.h>
 #include <WiFi.h>
-
+#include <esp_log.h>
 WiFiServer server(80);
 
 const char ssid[] = "ESP32-WiFi";
@@ -9,6 +9,8 @@ const char pass[] = "esp32wifi";
 
 const IPAddress ip(192, 168, 20, 2);
 const IPAddress subnet(255, 255, 255, 0);
+
+void startCameraServer();
 
 void setup()
 {
@@ -34,7 +36,7 @@ void setup()
   config.xclk_freq_hz = 20000000;
   config.ledc_timer = LEDC_TIMER_0;
   config.ledc_channel = LEDC_CHANNEL_0;
-  config.pixel_format = PIXFORMAT_YUV422;
+  config.pixel_format = PIXFORMAT_GRAYSCALE;
   config.frame_size = FRAMESIZE_QQVGA;
   // config.pixel_format = PIXFORMAT_RGB888;
   // config.frame_size = FRAMESIZE_QQVGA;
@@ -54,7 +56,7 @@ if(err != ESP_OK)
 void loop() {
   
   WiFiClient client = server.available();
-  
+  /*
   if(client)
   {
     Serial.println("success");
@@ -75,7 +77,7 @@ void loop() {
     // Serial.println("cant open");
   }
   // put your main code here, to run repeatedly:
-  
+  */
   camera_fb_t *fb = NULL;
   esp_err_t res = ESP_OK;
 
@@ -85,4 +87,6 @@ void loop() {
     Serial.println("holy shit");
   }
   Serial.println(fb -> len);
+  // fb -> len is size of picture?
+  startCameraServer();  
 }
