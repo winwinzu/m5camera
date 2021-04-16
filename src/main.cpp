@@ -88,5 +88,4 @@ void loop() {
   }
   Serial.println(fb -> len);
   // fb -> len is size of picture?
-  startCameraServer();  
 }
